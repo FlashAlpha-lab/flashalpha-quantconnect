@@ -82,8 +82,12 @@ public sealed class FlashAlphaHttpClient : IFlashAlphaHttpClient, IDisposable
                 // Coverage
                 "tickers"             => await _sdk.TickersAsync(symbol: null, ct).ConfigureAwait(false),
 
-                // Market data
+                // Market data — hyphenated forms (stock/quote, option/quote) are
+                // the plan-canonical bridge slugs; the SDK's underlying REST
+                // path uses unhyphenated stockquote / optionquote.
+                "stock/quote"         => await _sdk.StockQuoteAsync(ticker!, atString, ct).ConfigureAwait(false),
                 "stockquote"          => await _sdk.StockQuoteAsync(ticker!, atString, ct).ConfigureAwait(false),
+                "option/quote"        => await _sdk.OptionQuoteAsync(ticker!, atString, expiry: null, strike: null, type: null, ct).ConfigureAwait(false),
                 "optionquote"         => await _sdk.OptionQuoteAsync(ticker!, atString, expiry: null, strike: null, type: null, ct).ConfigureAwait(false),
                 "surface"             => await _sdk.SurfaceAsync(ticker!, atString, ct).ConfigureAwait(false),
 
@@ -94,18 +98,23 @@ public sealed class FlashAlphaHttpClient : IFlashAlphaHttpClient, IDisposable
                 "exposure/chex"       => await _sdk.ChexAsync(ticker!, atString, expiration: null, ct).ConfigureAwait(false),
                 "exposure/summary"    => await _sdk.ExposureSummaryAsync(ticker!, atString, ct).ConfigureAwait(false),
                 "exposure/levels"     => await _sdk.ExposureLevelsAsync(ticker!, atString, ct).ConfigureAwait(false),
+
+                // Narrative — plan-canonical "narrative" + SDK REST-path "exposure/narrative"
+                "narrative"           => await _sdk.NarrativeAsync(ticker!, atString, ct).ConfigureAwait(false),
                 "exposure/narrative"  => await _sdk.NarrativeAsync(ticker!, atString, ct).ConfigureAwait(false),
+
                 "exposure/zero-dte"   => await _sdk.ZeroDteAsync(ticker!, atString, strikeRange: null, ct).ConfigureAwait(false),
 
-                // Max pain — accept both slugs (REST path is /v1/maxpain; humans say "max-pain")
-                "maxpain"             => await _sdk.MaxPainAsync(ticker!, atString, expiration: null, ct).ConfigureAwait(false),
+                // Max pain — plan-canonical "max-pain" + SDK REST-path "maxpain"
                 "max-pain"            => await _sdk.MaxPainAsync(ticker!, atString, expiration: null, ct).ConfigureAwait(false),
+                "maxpain"             => await _sdk.MaxPainAsync(ticker!, atString, expiration: null, ct).ConfigureAwait(false),
 
                 // Composite
                 "stock/summary"       => await _sdk.StockSummaryAsync(ticker!, atString, ct).ConfigureAwait(false),
 
-                // Volatility
+                // Volatility — plan-canonical "adv-volatility" + SDK REST-path "adv_volatility"
                 "volatility"          => await _sdk.VolatilityAsync(ticker!, atString, ct).ConfigureAwait(false),
+                "adv-volatility"      => await _sdk.AdvVolatilityAsync(ticker!, atString, ct).ConfigureAwait(false),
                 "adv_volatility"      => await _sdk.AdvVolatilityAsync(ticker!, atString, ct).ConfigureAwait(false),
 
                 // VRP
