@@ -1,8 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <PackageId>FlashAlpha.QuantConnect</PackageId>
+    <RootNamespace>FlashAlpha.QuantConnect</RootNamespace>
     <Version>0.1.0</Version>
     <Authors>FlashAlpha</Authors>
+    <Company>FlashAlpha</Company>
+    <Copyright>Copyright (c) 2026 FlashAlpha</Copyright>
     <Description>FlashAlpha options-flow and dealer-positioning data as QuantConnect LEAN custom-data bars. GEX, DEX, VEX, vol surface, 0DTE, VRP, max-pain.</Description>
     <PackageTags>quantconnect;lean;options;gex;dex;vex;gamma-exposure;dealer-positioning;vol-surface;0dte;vrp;max-pain;flashalpha;options-flow;custom-data;algorithmic-trading;backtesting</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>

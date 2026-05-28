@@ -5,6 +5,7 @@
     <LangVersion>latest</LangVersion>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <NoWarn>1591</NoWarn>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+    <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
 </Project>
