@@ -6,7 +6,7 @@
 
 **Architecture:** Two parallel language implementations in one repo, sharing README/docs/release cadence. Each language has 17 hand-written `BaseData`/`PythonData` subclasses grouped into 12 files mirroring the historical SDK's `Models/` layout, plus a single `FlashAlphaSource` helper file that owns all real HTTP/auth/parse logic. The bridge wraps the official `flashalpha-historical-{dotnet,python}` SDKs as its HTTP layer rather than re-implementing HTTP. Tests are integration-only against the live API in CI (user override) — three layers per bar: subscription works, fields match REST response, end-to-end backtest hits golden numbers.
 
-**Tech Stack:** C# (.NET 8, xUnit, QuantConnect.Lean nuget), Python (3.10+, pytest, quantconnect/lean Python bindings), `flashalpha-historical-dotnet` (NuGet `FlashAlpha.Historical` ≥ 0.4.0-rc.1), `flashalpha-historical` (PyPI ≥ 0.4.0rc1), GitHub Actions, NuGet, PyPI.
+**Tech Stack:** C# (.NET 9 — QuantConnect.Lean has no net8.0 build; pinned to `QuantConnect.Lean 2.5.17414` to avoid floating into net10-only releases), xUnit, Python (3.10+, pytest, quantconnect/lean Python bindings), `flashalpha-historical-dotnet` (NuGet `FlashAlpha.Historical` ≥ 0.4.0-rc.1), `flashalpha-historical` (PyPI ≥ 0.4.0rc1), GitHub Actions, NuGet, PyPI.
 
 **Spec reference:** [docs/superpowers/specs/2026-05-28-flashalpha-quantconnect-design.md](../specs/2026-05-28-flashalpha-quantconnect-design.md)
 
@@ -30,7 +30,6 @@
 **Files:**
 - Create: `src/csharp/FlashAlpha.QuantConnect.sln`
 - Create: `src/csharp/FlashAlpha.QuantConnect/FlashAlpha.QuantConnect.csproj`
-- Create: `src/csharp/FlashAlpha.QuantConnect/AssemblyInfo.cs`
 - Create: `src/csharp/FlashAlpha.QuantConnect.IntegrationTests/FlashAlpha.QuantConnect.IntegrationTests.csproj`
 - Create: `src/csharp/Directory.Build.props`
 
