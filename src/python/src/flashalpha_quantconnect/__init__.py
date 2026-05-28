@@ -2,4 +2,20 @@
 
 __version__ = "0.1.0"
 
-# Re-exports populated as bars are added in later tasks.
+from . import config
+from .exceptions import (
+    FlashAlphaAuthMissingException,
+    FlashAlphaNetworkException,
+    FlashAlphaQuantConnectException,
+    FlashAlphaRateLimitedException,
+    FlashAlphaUnauthorizedException,
+)
+
+__all__ = [
+    "config",
+    "FlashAlphaAuthMissingException",
+    "FlashAlphaNetworkException",
+    "FlashAlphaQuantConnectException",
+    "FlashAlphaRateLimitedException",
+    "FlashAlphaUnauthorizedException",
+]
