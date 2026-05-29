@@ -27,4 +27,69 @@ public static class QCAlgorithmExtensions
         string ticker,
         Resolution resolution = Resolution.Daily)
         => algo.AddData<FlashAlphaGexBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha delta exposure (DEX) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the DEX subscription.</returns>
+    public static Security AddFlashAlphaDex(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaDexBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha vanna exposure (VEX) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the VEX subscription.</returns>
+    public static Security AddFlashAlphaVex(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaVexBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha charm exposure (CHEX) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the CHEX subscription.</returns>
+    public static Security AddFlashAlphaChex(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaChexBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha exposure-summary bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the exposure-summary subscription.</returns>
+    public static Security AddFlashAlphaExposureSummary(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaExposureSummaryBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha exposure-levels bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the exposure-levels subscription.</returns>
+    public static Security AddFlashAlphaExposureLevels(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaExposureLevelsBar>(ticker, resolution);
 }
