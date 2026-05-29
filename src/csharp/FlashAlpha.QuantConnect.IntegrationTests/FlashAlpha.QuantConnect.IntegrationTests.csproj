@@ -8,7 +8,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
     <PackageReference Include="xunit" Version="2.*" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
-    <PackageReference Include="FlashAlpha.Historical" Version="0.4.0-rc.1" />
+    <PackageReference Include="FlashAlpha.Historical" Version="0.4.0-rc.10" />
   </ItemGroup>
 
   <ItemGroup>
