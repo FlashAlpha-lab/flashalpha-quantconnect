@@ -46,4 +46,5 @@ packages = ["src/flashalpha_quantconnect"]
 [tool.pytest.ini_options]
 markers = [
   "integration: hits historical.flashalpha.com (requires FLASHALPHA_API_KEY)",
+  "end_to_end: full LEAN backtest (requires FLASHALPHA_LEAN_HARNESS)",
 ]

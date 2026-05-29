@@ -17,7 +17,7 @@ from .data.option_quote import OptionQuoteBar
 from .data.stock_quote import StockQuoteBar
 from .data.stock_summary import StockSummaryBar
 from .data.surface import SurfaceBar
-from .data.tickers import TickersBar
+from .data.tickers import FlashAlphaTickersUniverse, TickersBar
 from .data.volatility import AdvVolatilityBar, VolatilityBar
 from .data.vrp import VrpBar
 from .data.zero_dte import ZeroDteBar
@@ -67,6 +67,7 @@ __all__ = [
     "StockQuoteBar",
     "OptionQuoteBar",
     "TickersBar",
+    "FlashAlphaTickersUniverse",
     "add_flashalpha_gex",
     "add_flashalpha_dex",
     "add_flashalpha_vex",

@@ -14,4 +14,10 @@
   <ItemGroup>
     <ProjectReference Include="../FlashAlpha.QuantConnect/FlashAlpha.QuantConnect.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Include="golden/end_to_end.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
