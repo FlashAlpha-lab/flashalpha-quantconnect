@@ -92,4 +92,43 @@ public static class QCAlgorithmExtensions
         string ticker,
         Resolution resolution = Resolution.Daily)
         => algo.AddData<FlashAlphaExposureLevelsBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha volatility-surface bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the surface subscription.</returns>
+    public static Security AddFlashAlphaSurface(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaSurfaceBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha zero-DTE (same-day-expiry) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the zero-DTE subscription.</returns>
+    public static Security AddFlashAlphaZeroDte(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaZeroDteBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha max-pain bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the max-pain subscription.</returns>
+    public static Security AddFlashAlphaMaxPain(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaMaxPainBar>(ticker, resolution);
 }
