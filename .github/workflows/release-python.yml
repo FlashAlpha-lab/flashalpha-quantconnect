@@ -1,0 +1,50 @@
+name: Release Python to PyPI
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Verify tag matches pyproject version
+        run: |
+          TAG_VERSION=${GITHUB_REF_NAME#v}
+          # Strip any pre-release dot from PEP 440 (e.g. 0.2.0rc1 → 0.2.0rc1; tag would be 0.2.0-rc.1)
+          # Tags use SemVer (v0.2.0-rc.1) and PyPI uses PEP 440 (0.2.0rc1) — normalize for comparison.
+          TAG_NORMALIZED=$(echo "$TAG_VERSION" | tr -d '-' | tr -d '.' | sed 's/rc/.rc./' || true)
+          PYPROJ_VERSION=$(grep -oPm1 '(?<=^version = ")[^"]+' src/python/pyproject.toml)
+          # Simple equality after stripping
+          A=$(echo "$TAG_VERSION" | tr -d 'v-.')
+          B=$(echo "$PYPROJ_VERSION" | tr -d '-.')
+          if [ "$A" != "$B" ]; then
+            echo "Tag $TAG_VERSION does not match pyproject version $PYPROJ_VERSION"
+            exit 1
+          fi
+          echo "Version OK: $TAG_VERSION ↔ $PYPROJ_VERSION"
+
+      - name: Install build tools
+        run: pip install build twine
+
+      - name: Build
+        working-directory: src/python
+        run: python -m build
+
+      - name: Twine check
+        working-directory: src/python
+        run: twine check dist/*
+
+      - name: Publish to PyPI
+        working-directory: src/python
+        env:
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_TOKEN }}
+        run: twine upload dist/*

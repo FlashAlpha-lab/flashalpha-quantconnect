@@ -1,0 +1,40 @@
+name: Nightly drift sentinel
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # 06:00 UTC daily
+  workflow_dispatch:
+
+jobs:
+  drift:
+    name: Schema + golden drift check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with: { dotnet-version: '9.0.x' }
+
+      - name: Setup Python 3.12
+        uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+
+      - name: C# drift + integration tests (live API)
+        env:
+          FLASHALPHA_API_KEY: ${{ secrets.FLASHALPHA_API_KEY }}
+        run: dotnet test src/csharp/FlashAlpha.QuantConnect.sln --filter "Category=Integration"
+
+      - name: Python drift + integration tests (live API)
+        working-directory: src/python
+        env:
+          FLASHALPHA_API_KEY: ${{ secrets.FLASHALPHA_API_KEY }}
+        run: |
+          pip install -e ".[dev]"
+          pytest -v -m integration
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Nightly drift detected — investigate."
+          echo "Most likely causes: (a) SDK shipped a new field that the bridge doesn't expose, (b) API response shape changed, (c) FlashAlpha API outage."

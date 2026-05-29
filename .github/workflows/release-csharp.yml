@@ -1,0 +1,39 @@
+name: Release C# to NuGet
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Verify tag matches csproj Version
+        run: |
+          TAG_VERSION=${GITHUB_REF_NAME#v}
+          CSPROJ_VERSION=$(grep -oPm1 '(?<=<Version>)[^<]+' src/csharp/FlashAlpha.QuantConnect/FlashAlpha.QuantConnect.csproj)
+          if [ "$TAG_VERSION" != "$CSPROJ_VERSION" ]; then
+            echo "Tag $TAG_VERSION does not match csproj <Version>$CSPROJ_VERSION</Version>"
+            exit 1
+          fi
+          echo "Version OK: $TAG_VERSION"
+
+      - name: Restore + build
+        run: |
+          dotnet restore src/csharp/FlashAlpha.QuantConnect.sln
+          dotnet build src/csharp/FlashAlpha.QuantConnect/FlashAlpha.QuantConnect.csproj -c Release --no-restore
+
+      - name: Pack
+        run: dotnet pack src/csharp/FlashAlpha.QuantConnect/FlashAlpha.QuantConnect.csproj -c Release -o nupkg --no-build
+
+      - name: Push to NuGet
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: dotnet nuget push "nupkg/FlashAlpha.QuantConnect.*.nupkg" --api-key "$NUGET_API_KEY" --source https://api.nuget.org/v3/index.json --skip-duplicate
