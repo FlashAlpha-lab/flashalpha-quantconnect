@@ -94,6 +94,17 @@ public static class FlashAlphaSource
         return _cache.TryGetValue(key, out var cached) ? cached : string.Empty;
     }
 
+    /// <summary>
+    /// Resolves the sentinel URL (or raw JSON fallback) to the cached JSON
+    /// payload. Public hook for bars whose JSON root is not an object
+    /// (e.g. <see cref="FlashAlphaOptionQuoteBar"/> whose payload is an array)
+    /// and therefore can't use <see cref="Parse{T}"/>'s
+    /// <see cref="FlashAlphaJsonMapper"/> pipeline.
+    /// </summary>
+    /// <param name="line">Sentinel URL or raw JSON.</param>
+    /// <returns>The cached JSON string, or empty when unresolved.</returns>
+    public static string ResolveJsonForBar(string line) => ResolveJson(line);
+
     private static string MakeKey(string endpoint, string ticker, DateTime date)
         => $"{endpoint}|{ticker}|{date:yyyy-MM-dd}";
 

@@ -13,7 +13,11 @@ from .data.exposure import (
 )
 from .data.max_pain import MaxPainBar
 from .data.narrative import NarrativeBar
+from .data.option_quote import OptionQuoteBar
+from .data.stock_quote import StockQuoteBar
+from .data.stock_summary import StockSummaryBar
 from .data.surface import SurfaceBar
+from .data.tickers import TickersBar
 from .data.volatility import AdvVolatilityBar, VolatilityBar
 from .data.vrp import VrpBar
 from .data.zero_dte import ZeroDteBar
@@ -33,7 +37,11 @@ from .extensions import (
     add_flashalpha_gex,
     add_flashalpha_max_pain,
     add_flashalpha_narrative,
+    add_flashalpha_option_quote,
+    add_flashalpha_stock_quote,
+    add_flashalpha_stock_summary,
     add_flashalpha_surface,
+    add_flashalpha_tickers,
     add_flashalpha_vex,
     add_flashalpha_volatility,
     add_flashalpha_vrp,
@@ -55,6 +63,10 @@ __all__ = [
     "AdvVolatilityBar",
     "VrpBar",
     "NarrativeBar",
+    "StockSummaryBar",
+    "StockQuoteBar",
+    "OptionQuoteBar",
+    "TickersBar",
     "add_flashalpha_gex",
     "add_flashalpha_dex",
     "add_flashalpha_vex",
@@ -68,6 +80,10 @@ __all__ = [
     "add_flashalpha_adv_volatility",
     "add_flashalpha_vrp",
     "add_flashalpha_narrative",
+    "add_flashalpha_stock_summary",
+    "add_flashalpha_stock_quote",
+    "add_flashalpha_option_quote",
+    "add_flashalpha_tickers",
     "FlashAlphaAuthMissingException",
     "FlashAlphaNetworkException",
     "FlashAlphaQuantConnectException",

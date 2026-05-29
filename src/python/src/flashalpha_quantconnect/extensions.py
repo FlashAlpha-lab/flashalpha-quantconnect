@@ -23,7 +23,11 @@ from .data.exposure import (
 )
 from .data.max_pain import MaxPainBar
 from .data.narrative import NarrativeBar
+from .data.option_quote import OptionQuoteBar
+from .data.stock_quote import StockQuoteBar
+from .data.stock_summary import StockSummaryBar
 from .data.surface import SurfaceBar
+from .data.tickers import TickersBar
 from .data.volatility import AdvVolatilityBar, VolatilityBar
 from .data.vrp import VrpBar
 from .data.zero_dte import ZeroDteBar
@@ -158,3 +162,49 @@ def add_flashalpha_narrative(
     Equivalent to: ``algorithm.AddData(NarrativeBar, ticker, resolution)``.
     """
     return algorithm.AddData(NarrativeBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_stock_summary(
+    algorithm: Any, ticker: str, resolution: Any = None
+) -> Any:
+    """Subscribe the algorithm to stock-summary composite bars for the given ticker.
+
+    Equivalent to: ``algorithm.AddData(StockSummaryBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(StockSummaryBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_stock_quote(
+    algorithm: Any, ticker: str, resolution: Any = None
+) -> Any:
+    """Subscribe the algorithm to stock-quote (bid/ask/mid/last) bars for the given ticker.
+
+    Equivalent to: ``algorithm.AddData(StockQuoteBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(StockQuoteBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_option_quote(
+    algorithm: Any, ticker: str, resolution: Any = None
+) -> Any:
+    """Subscribe the algorithm to option-quote (per-contract bid/ask/mid + greeks) bars.
+
+    Equivalent to: ``algorithm.AddData(OptionQuoteBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(OptionQuoteBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_tickers(
+    algorithm: Any, ticker: str = "_universe", resolution: Any = None
+) -> Any:
+    """Subscribe the algorithm to tickers (coverage / supported-symbols) bars.
+
+    Special case: the upstream endpoint is NOT ticker-scoped. The HTTP
+    client passes ``symbol=None`` to the SDK regardless of the LEAN
+    symbol on the subscription; pass any sentinel (default
+    ``"_universe"``) and the bar will carry the full global coverage
+    table.
+
+    Equivalent to: ``algorithm.AddData(TickersBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(TickersBar, ticker, _resolve_default(resolution))

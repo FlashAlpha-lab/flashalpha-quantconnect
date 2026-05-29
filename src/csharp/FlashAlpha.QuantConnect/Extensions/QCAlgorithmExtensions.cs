@@ -183,4 +183,63 @@ public static class QCAlgorithmExtensions
         string ticker,
         Resolution resolution = Resolution.Daily)
         => algo.AddData<FlashAlphaNarrativeBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha stock-summary composite bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the stock-summary subscription.</returns>
+    public static Security AddFlashAlphaStockSummary(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaStockSummaryBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha stock-quote (bid/ask/mid/last) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the stock-quote subscription.</returns>
+    public static Security AddFlashAlphaStockQuote(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaStockQuoteBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha option-quote (per-contract bid/ask/mid + greeks) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the option-quote subscription.</returns>
+    public static Security AddFlashAlphaOptionQuote(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaOptionQuoteBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha tickers (coverage / supported-symbols) bars.
+    /// </summary>
+    /// <remarks>
+    /// Special case: the upstream endpoint is NOT ticker-scoped. The HTTP client
+    /// ignores the ticker when the slug is <c>"tickers"</c>; pass any sentinel
+    /// (e.g. <c>"_universe"</c>) and the bar will carry the full global
+    /// coverage table.
+    /// </remarks>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">LEAN-side identity for the subscription; the API
+    /// ignores it. Recommended sentinel: <c>"_universe"</c>.</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the tickers subscription.</returns>
+    public static Security AddFlashAlphaTickers(
+        this QCAlgorithm algo,
+        string ticker = "_universe",
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaTickersBar>(ticker, resolution);
 }
