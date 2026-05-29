@@ -88,6 +88,15 @@ def parse(bar_cls: Type, line: str, symbol: Any, date: datetime) -> Any:
         prop = _to_pascal_case(snake)
         if hasattr(bar, prop):
             setattr(bar, prop, value)
+
+    # Honor explicit field-name aliases declared on the bar class.
+    # Python equivalent of C#'s [JsonPropertyName] — lets a bar property
+    # like ``Ticker`` pick up the JSON ``symbol`` key (since QC LEAN's
+    # ``BaseData.Symbol`` collides with the SDK's ``symbol`` field).
+    aliases = getattr(bar_cls, "_field_aliases", {})
+    for prop, json_key in aliases.items():
+        if json_key in obj and hasattr(bar, prop):
+            setattr(bar, prop, obj[json_key])
     return bar
 
 
