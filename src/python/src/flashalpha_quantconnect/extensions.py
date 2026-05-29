@@ -22,7 +22,10 @@ from .data.exposure import (
     VexBar,
 )
 from .data.max_pain import MaxPainBar
+from .data.narrative import NarrativeBar
 from .data.surface import SurfaceBar
+from .data.volatility import AdvVolatilityBar, VolatilityBar
+from .data.vrp import VrpBar
 from .data.zero_dte import ZeroDteBar
 
 
@@ -117,3 +120,41 @@ def add_flashalpha_max_pain(algorithm: Any, ticker: str, resolution: Any = None)
     Equivalent to: ``algorithm.AddData(MaxPainBar, ticker, resolution)``.
     """
     return algorithm.AddData(MaxPainBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_volatility(
+    algorithm: Any, ticker: str, resolution: Any = None
+) -> Any:
+    """Subscribe the algorithm to volatility-analytics bars for the given ticker.
+
+    Equivalent to: ``algorithm.AddData(VolatilityBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(VolatilityBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_adv_volatility(
+    algorithm: Any, ticker: str, resolution: Any = None
+) -> Any:
+    """Subscribe the algorithm to advanced-volatility-analytics bars for the given ticker.
+
+    Equivalent to: ``algorithm.AddData(AdvVolatilityBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(AdvVolatilityBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_vrp(algorithm: Any, ticker: str, resolution: Any = None) -> Any:
+    """Subscribe the algorithm to variance-risk-premium (VRP) bars for the given ticker.
+
+    Equivalent to: ``algorithm.AddData(VrpBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(VrpBar, ticker, _resolve_default(resolution))
+
+
+def add_flashalpha_narrative(
+    algorithm: Any, ticker: str, resolution: Any = None
+) -> Any:
+    """Subscribe the algorithm to narrative (verbal positioning) bars for the given ticker.
+
+    Equivalent to: ``algorithm.AddData(NarrativeBar, ticker, resolution)``.
+    """
+    return algorithm.AddData(NarrativeBar, ticker, _resolve_default(resolution))

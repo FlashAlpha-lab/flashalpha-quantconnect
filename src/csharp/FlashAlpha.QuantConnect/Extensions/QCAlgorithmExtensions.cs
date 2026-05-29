@@ -131,4 +131,56 @@ public static class QCAlgorithmExtensions
         string ticker,
         Resolution resolution = Resolution.Daily)
         => algo.AddData<FlashAlphaMaxPainBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha volatility-analytics bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the volatility subscription.</returns>
+    public static Security AddFlashAlphaVolatility(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaVolatilityBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha advanced-volatility-analytics bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the adv-volatility subscription.</returns>
+    public static Security AddFlashAlphaAdvVolatility(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaAdvVolatilityBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha variance-risk-premium (VRP) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the VRP subscription.</returns>
+    public static Security AddFlashAlphaVrp(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaVrpBar>(ticker, resolution);
+
+    /// <summary>
+    /// Subscribe to FlashAlpha narrative (verbal dealer-positioning) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the narrative subscription.</returns>
+    public static Security AddFlashAlphaNarrative(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaNarrativeBar>(ticker, resolution);
 }
