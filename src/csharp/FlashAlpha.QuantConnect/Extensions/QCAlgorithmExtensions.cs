@@ -1,0 +1,30 @@
+using FlashAlpha.QuantConnect.Data;
+using QuantConnect;
+using QuantConnect.Algorithm;
+using QuantConnect.Securities;
+
+namespace FlashAlpha.QuantConnect;
+
+/// <summary>
+/// Sugar extensions on <see cref="QCAlgorithm"/> for subscribing to FlashAlpha bars.
+/// </summary>
+/// <remarks>
+/// Each method is a thin one-liner wrapper around <c>AddData&lt;TBar&gt;(ticker, resolution)</c>
+/// so users can write <c>algo.AddFlashAlphaGex("SPY")</c> instead of
+/// <c>algo.AddData&lt;FlashAlphaGexBar&gt;("SPY", Resolution.Daily)</c>.
+/// </remarks>
+public static class QCAlgorithmExtensions
+{
+    /// <summary>
+    /// Subscribe to FlashAlpha gamma exposure (GEX) bars for the given ticker.
+    /// </summary>
+    /// <param name="algo">The hosting algorithm.</param>
+    /// <param name="ticker">Underlying ticker (e.g. <c>"SPY"</c>).</param>
+    /// <param name="resolution">Bar resolution; defaults to <see cref="Resolution.Daily"/>.</param>
+    /// <returns>The <see cref="Security"/> registered for the GEX subscription.</returns>
+    public static Security AddFlashAlphaGex(
+        this QCAlgorithm algo,
+        string ticker,
+        Resolution resolution = Resolution.Daily)
+        => algo.AddData<FlashAlphaGexBar>(ticker, resolution);
+}
