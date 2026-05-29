@@ -17,41 +17,11 @@ from __future__ import annotations
 
 from typing import Any, List, Optional
 
-
-# Lazy import — PythonData only resolves inside LEAN. Tests import the bar
-# class via this module but exercise GetSource/Reader by calling the shared
-# helpers directly, so the LEAN base class is not load-bearing for tests.
-#
-# IMPORTANT: ``quantconnect-stubs``' ``QuantConnect/__init__.py`` mutates
-# ``sys.path`` (removes site-packages, calls ``del sys.modules["QuantConnect"]``,
-# then attempts ``from clr import AddReference``) — when pythonnet isn't
-# installed (i.e. outside the LEAN runtime), the ``clr`` import raises but
-# ``sys.path`` is never restored, which then breaks every subsequent
-# third-party import in the process. We snapshot/restore ``sys.path`` and
-# the ``QuantConnect`` ``sys.modules`` entry around the try so the failure
-# is fully contained.
-import sys as _sys
-_saved_sys_path = _sys.path[:]
-_saved_qc_module = _sys.modules.get("QuantConnect")
-try:
-    from QuantConnect.Python import PythonData as _PythonDataBase
-except Exception:
-    # Stand-in base so the module imports cleanly outside LEAN.
-    class _PythonDataBase:  # type: ignore
-        pass
-    # Restore the path / module state the stubs init mutated before failing.
-    _sys.path = _saved_sys_path
-    if _saved_qc_module is not None:
-        _sys.modules["QuantConnect"] = _saved_qc_module
-    elif "QuantConnect" in _sys.modules and _sys.modules["QuantConnect"] is None:
-        _sys.modules.pop("QuantConnect", None)
-del _sys, _saved_sys_path, _saved_qc_module
-
-
+from ._lean_import import PythonDataBase
 from .source import source_for, parse
 
 
-class GexBar(_PythonDataBase):
+class GexBar(PythonDataBase):
     """Gamma exposure (GEX) bar.
 
     Mirrors ``flashalpha_historical.types.GexResponse`` from
