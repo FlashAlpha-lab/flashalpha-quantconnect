@@ -1,0 +1,27 @@
+# flashalpha-quantconnect
+
+> FlashAlpha options-flow and dealer-positioning data as native QuantConnect LEAN custom-data bars. Seventeen endpoint families — GEX/DEX/VEX/CHEX, exposure summary/levels, vol surface, 0DTE, max pain, volatility, advanced vol (SVI), VRP, narrative, stock summary/quote, option quote, tickers — exposed as `BaseData` subclasses in C# and `PythonData` subclasses in Python. Works in QC Cloud and self-hosted LEAN. Versioned to the underlying `flashalpha-historical` SDK so schema drift breaks at compile time.
+
+## Docs
+
+- [README](README.md): elevator pitch, install, first algorithm, full data catalog, FAQ
+- [Getting started](docs/getting-started.md): sixty-second install + first algorithm in C# and Python
+- [Data types](docs/data-types.md): per-bar field reference and side-by-side `OnData` samples for all 17 families
+- [Auth](docs/auth.md): API key setup for QC Cloud, self-hosted LEAN, and CI
+- [Troubleshooting](docs/troubleshooting.md): error codes (FA-AUTH-001 / FA-AUTH-002 / FA-RATE-001 / FA-NET-001) plus the "two symbols" gotcha
+- [Changelog](CHANGELOG.md): release history
+
+## Recipes
+
+- [Subscribe to GEX in QuantConnect](docs/recipes/subscribe-to-gex-in-quantconnect.md)
+- [Filter universe by GEX regime](docs/recipes/filter-universe-by-gex-regime.md)
+- [Combine FlashAlpha with equity data](docs/recipes/combine-flashalpha-with-equity-data.md)
+- [0DTE pin-risk check in QuantConnect](docs/recipes/0dte-pin-risk-check-in-quantconnect.md)
+- [Vol-surface snapshot in QuantConnect](docs/recipes/vol-surface-snapshot-in-quantconnect.md)
+
+## Related
+
+- [historical.flashalpha.com](https://historical.flashalpha.com): the underlying API
+- [flashalpha-historical (PyPI)](https://pypi.org/project/flashalpha-historical/): raw Python SDK this bridge sits on top of
+- [FlashAlpha.Historical (NuGet)](https://www.nuget.org/packages/FlashAlpha.Historical/): raw .NET SDK
+- [LEAN custom data](https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/custom-data): QC's reference for custom-data subscriptions
