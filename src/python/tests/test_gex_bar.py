@@ -54,7 +54,7 @@ def test_gex_bar_fetch_and_parse_populates_fields():
 def test_gex_bar_fields_match_rest_response():
     """Layer 2: every field on the bar matches the raw SDK response field-for-field."""
     sdk = FlashAlphaHistorical(api_key=config.resolve_api_key())
-    raw = sdk.gex(ticker=TEST_TICKER, at=TEST_DATE)
+    raw = sdk.gex(symbol=TEST_TICKER, at=TEST_DATE)
 
     symbol = _make_symbol(TEST_TICKER)
     src = source.source_for("exposure/gex", symbol, TEST_DATE)
