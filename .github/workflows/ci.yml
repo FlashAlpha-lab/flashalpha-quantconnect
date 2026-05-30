@@ -70,23 +70,26 @@ jobs:
         run: dotnet test src/csharp/FlashAlpha.QuantConnect.sln --filter "FullyQualifiedName~SchemaDriftGuard"
 
   secrets-scan:
-    name: Gitleaks
+    name: Gitleaks CLI
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
         with: { fetch-depth: 0 }
-      - uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Install gitleaks
+        run: |
+          curl -sSL https://github.com/gitleaks/gitleaks/releases/download/v8.18.4/gitleaks_8.18.4_linux_x64.tar.gz | tar -xz
+          sudo mv gitleaks /usr/local/bin/
+      - name: Scan
+        run: gitleaks detect --source . --no-banner --exit-code 1
 
   docs:
     name: Markdown link check
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Check markdown links
+      - name: Check markdown links (skip superpowers/ spec files with placeholder URLs)
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: 'yes'
-          folder-path: 'docs'
+          folder-path: 'docs/recipes,docs/getting-started.md,docs/data-types.md,docs/auth.md,docs/troubleshooting.md'
           file-path: 'README.md, CHANGELOG.md'
