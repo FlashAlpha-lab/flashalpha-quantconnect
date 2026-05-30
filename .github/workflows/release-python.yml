@@ -17,13 +17,10 @@ jobs:
 
       - name: Verify tag matches pyproject version
         run: |
-          TAG_VERSION=${GITHUB_REF_NAME#v}
-          # Strip any pre-release dot from PEP 440 (e.g. 0.2.0rc1 → 0.2.0rc1; tag would be 0.2.0-rc.1)
-          # Tags use SemVer (v0.2.0-rc.1) and PyPI uses PEP 440 (0.2.0rc1) — normalize for comparison.
-          TAG_NORMALIZED=$(echo "$TAG_VERSION" | tr -d '-' | tr -d '.' | sed 's/rc/.rc./' || true)
-          PYPROJ_VERSION=$(grep -oPm1 '(?<=^version = ")[^"]+' src/python/pyproject.toml)
-          # Simple equality after stripping
-          A=$(echo "$TAG_VERSION" | tr -d 'v-.')
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          PYPROJ_VERSION=$(python -c "import tomllib; print(tomllib.load(open('src/python/pyproject.toml','rb'))['project']['version'])")
+          # Normalize SemVer pre-release (0.2.0-rc.1) ↔ PEP 440 (0.2.0rc1) for comparison
+          A=$(echo "$TAG_VERSION" | tr -d '-.')
           B=$(echo "$PYPROJ_VERSION" | tr -d '-.')
           if [ "$A" != "$B" ]; then
             echo "Tag $TAG_VERSION does not match pyproject version $PYPROJ_VERSION"

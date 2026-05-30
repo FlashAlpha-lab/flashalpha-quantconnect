@@ -13,6 +13,14 @@
     <RepositoryUrl>https://github.com/FlashAlpha-lab/flashalpha-quantconnect</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!--
+      Intentionally pinned to FlashAlpha.Historical 0.4.0-rc.10 — that is the
+      first published version carrying the GexResponse / GexStrikeRow / etc.
+      types this bridge wraps. The Python side accepts >=0.4.0rc1 in the
+      stable release per PEP 440. Suppress NU5104 so a stable 0.1.0 with a
+      pre-release dep is allowed; the dep version is documented + intentional.
+    -->
+    <NoWarn>$(NoWarn);NU5104</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
