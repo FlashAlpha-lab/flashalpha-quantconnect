@@ -19,9 +19,10 @@ jobs:
         run: |
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           PYPROJ_VERSION=$(python -c "import tomllib; print(tomllib.load(open('src/python/pyproject.toml','rb'))['project']['version'])")
-          # Normalize SemVer pre-release (0.2.0-rc.1) ↔ PEP 440 (0.2.0rc1) for comparison
-          A=$(echo "$TAG_VERSION" | tr -d '-.')
-          B=$(echo "$PYPROJ_VERSION" | tr -d '-.')
+          # Normalize SemVer pre-release (0.2.0-rc.1) ↔ PEP 440 (0.2.0rc1) for comparison.
+          # sed avoids tr's "-." being misparsed as an option flag.
+          A=$(echo "$TAG_VERSION" | sed 's/[-.]//g')
+          B=$(echo "$PYPROJ_VERSION" | sed 's/[-.]//g')
           if [ "$A" != "$B" ]; then
             echo "Tag $TAG_VERSION does not match pyproject version $PYPROJ_VERSION"
             exit 1
