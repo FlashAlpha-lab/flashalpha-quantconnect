@@ -91,5 +91,5 @@ jobs:
         uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
           use-quiet-mode: 'yes'
-          folder-path: 'docs/recipes,docs/getting-started.md,docs/data-types.md,docs/auth.md,docs/troubleshooting.md'
-          file-path: 'README.md, CHANGELOG.md'
+          folder-path: 'docs/recipes'
+          file-path: 'README.md, CHANGELOG.md, docs/getting-started.md, docs/data-types.md, docs/auth.md, docs/troubleshooting.md'
