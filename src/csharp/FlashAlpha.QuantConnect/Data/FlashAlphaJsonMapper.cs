@@ -28,9 +28,28 @@ internal static class FlashAlphaJsonMapper
     public static void PopulateProperties(object bar, JsonElement root)
     {
         if (root.ValueKind != JsonValueKind.Object) return;
-        var type = bar.GetType();
 
-        foreach (var prop in type.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+        // Walk only properties declared on the bar SUBCLASS — never inherited
+        // ones. BaseData ships an inherited Symbol/Time/Price/Value/EndTime
+        // surface; the JSON's "symbol" key would otherwise auto-route into
+        // BaseData.Symbol (typed QuantConnect.Symbol) and the deserializer
+        // would throw on the string value. FlashAlphaSource.Parse already
+        // sets Symbol/Time/EndTime explicitly before calling this method.
+        var type = bar.GetType();
+        for (var t = type; t != null && t != typeof(object); t = t.BaseType)
+        {
+            // Stop walking once we hit anything from QuantConnect.* — that's
+            // LEAN's base hierarchy (BaseData, IBaseDataBar, ...). Subclass
+            // properties remain in play.
+            if (t.Namespace?.StartsWith("QuantConnect", StringComparison.Ordinal) == true) break;
+            PopulateFromType(bar, t, root);
+        }
+    }
+
+    private static void PopulateFromType(object bar, Type declaring, JsonElement root)
+    {
+        const BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.DeclaredOnly;
+        foreach (var prop in declaring.GetProperties(flags))
         {
             if (!prop.CanWrite) continue;
             var jsonName = prop.GetCustomAttribute<JsonPropertyNameAttribute>()?.Name

@@ -84,9 +84,23 @@ def parse(bar_cls: Type, line: str, symbol: Any, date: datetime) -> Any:
     if not isinstance(obj, dict):
         return bar
 
+    # Collect attribute names declared on the bar SUBCLASS (and any non-LEAN
+    # ancestors). We deliberately stop walking at the LEAN base — its
+    # ``Symbol`` / ``Time`` / ``EndTime`` / ``Value`` / ``Price`` attributes
+    # are already populated above, and the JSON's ``symbol`` key would
+    # otherwise auto-route into ``BaseData.Symbol`` and clobber the QC
+    # Symbol object with the raw ticker string.
+    declared: set[str] = set()
+    for cls in bar_cls.__mro__:
+        mod = getattr(cls, "__module__", "") or ""
+        if mod.startswith("QuantConnect") or cls is object:
+            break
+        declared.update(vars(cls).keys())
+        declared.update(getattr(cls, "__annotations__", {}).keys())
+
     for snake, value in obj.items():
         prop = _to_pascal_case(snake)
-        if hasattr(bar, prop):
+        if prop in declared:
             setattr(bar, prop, value)
 
     # Honor explicit field-name aliases declared on the bar class.

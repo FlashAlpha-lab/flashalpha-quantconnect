@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "flashalpha-quantconnect"
-version = "0.1.0"
+version = "0.1.1"
 description = "FlashAlpha options-flow and dealer-positioning data as QuantConnect LEAN custom-data bars. GEX, DEX, VEX, vol surface, 0DTE, VRP, max-pain."
 readme = "README.md"
 license = "MIT"

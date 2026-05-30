@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 _No changes yet._
 
+## [0.1.1] — 2026-05-30
+
+### Fixed
+
+- **`FlashAlphaJsonMapper` (C#) and `data.source.parse` (Python) no longer overwrite inherited LEAN properties from the JSON.** Previously the snake-case auto-mapper would walk every public property on the bar — including inherited `BaseData.Symbol` / `PythonData.Symbol` — and try to set them from JSON keys like `"symbol":"SPY"`. In C# this threw `JsonException` ("could not convert to `QuantConnect.Symbol`") at the very first parse; in Python it silently clobbered the QC Symbol object with the raw ticker string. The mapper now walks only attributes declared on the bar subclass (and any non-`QuantConnect.*` ancestors), so LEAN-owned surface is left alone. Caught by running v0.1.0 as a real NuGet consumer — surfaces on the first `FlashAlphaSource.Parse` against the live API.
+
 ## [0.1.0] — 2026-05-30
 
 Initial public release. The bridge ships with full coverage of the FlashAlpha historical API surface as native QuantConnect LEAN custom-data bars, for both C# and Python.
@@ -26,5 +32,6 @@ Initial public release. The bridge ships with full coverage of the FlashAlpha hi
 - **Documentation corpus.** Repo-root `README.md` with side-by-side C# + Python examples, `docs/getting-started.md`, `docs/data-types.md` (per-bar field reference for all 17 endpoints), `docs/auth.md`, `docs/troubleshooting.md`, and five `docs/recipes/*.md` cookbooks.
 - **`llms.txt`** site map per [llmstxt.org](https://llmstxt.org/).
 
-[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/releases/tag/v0.1.0
