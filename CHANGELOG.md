@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 _No changes yet._
 
+## [0.1.2] — 2026-06-01
+
+### Fixed
+
+- **`data.source.source_for` import path corrected.** v0.1.1 imported `SubscriptionDataSource` from `QuantConnect` directly — but in LEAN's runtime Python it lives at `QuantConnect.Data.SubscriptionDataSource`. Every Python consumer hit `cannot import name 'SubscriptionDataSource' from 'QuantConnect' (unknown location)` on the first bar subscription, which caused LEAN's data feed worker to silently drop the subscription. Algorithms would run to completion with 0 trades + flat equity, leaving the failure undetectable without inspecting LEAN's TRACE logs. Caught by Tier 2 smoke validation of the gamma-scalping essay in `flashalpha-historical-examples`; the fix is a one-liner consolidating the imports under `QuantConnect.Data`.
+
 ## [0.1.1] — 2026-05-30
 
 ### Fixed
@@ -32,6 +38,7 @@ Initial public release. The bridge ships with full coverage of the FlashAlpha hi
 - **Documentation corpus.** Repo-root `README.md` with side-by-side C# + Python examples, `docs/getting-started.md`, `docs/data-types.md` (per-bar field reference for all 17 endpoints), `docs/auth.md`, `docs/troubleshooting.md`, and five `docs/recipes/*.md` cookbooks.
 - **`llms.txt`** site map per [llmstxt.org](https://llmstxt.org/).
 
-[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/releases/tag/v0.1.0
