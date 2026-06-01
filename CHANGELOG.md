@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 _No changes yet._
 
+## [0.1.3] — 2026-06-02
+
+### Fixed
+
+- **`SubscriptionTransportMedium` import path corrected.** v0.1.2 fixed half the original bug — moved `SubscriptionDataSource` to its correct namespace `QuantConnect.Data`. But `SubscriptionTransportMedium` is in `QuantConnect` (the parent), not `QuantConnect.Data`. Same silent-no-trades failure mode as v0.1.1. Fix splits the import: `from QuantConnect import SubscriptionTransportMedium` + `from QuantConnect.Data import SubscriptionDataSource, FileFormat`. Caught by re-running the gamma-scalping Tier 2 smoke after the v0.1.2 bump in `flashalpha-historical-examples`.
+
 ## [0.1.2] — 2026-06-01
 
 ### Fixed
