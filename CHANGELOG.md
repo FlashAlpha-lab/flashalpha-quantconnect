@@ -38,7 +38,8 @@ Initial public release. The bridge ships with full coverage of the FlashAlpha hi
 - **Documentation corpus.** Repo-root `README.md` with side-by-side C# + Python examples, `docs/getting-started.md`, `docs/data-types.md` (per-bar field reference for all 17 endpoints), `docs/auth.md`, `docs/troubleshooting.md`, and five `docs/recipes/*.md` cookbooks.
 - **`llms.txt`** site map per [llmstxt.org](https://llmstxt.org/).
 
-[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.2...HEAD
+[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.3...HEAD
+[0.1.3]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/releases/tag/v0.1.0

@@ -50,7 +50,8 @@ def source_for(endpoint: str, symbol: Any, date: datetime) -> Any:
     """Eagerly fetch the JSON for (endpoint, ticker, date), cache it, return
     a sentinel ``SubscriptionDataSource`` that ``parse`` will resolve via
     the cache key."""
-    from QuantConnect.Data import SubscriptionDataSource, SubscriptionTransportMedium, FileFormat
+    from QuantConnect import SubscriptionTransportMedium
+    from QuantConnect.Data import SubscriptionDataSource, FileFormat
 
     ticker = symbol.Value
     key = _make_key(endpoint, ticker, date)
