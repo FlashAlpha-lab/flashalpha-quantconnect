@@ -1,6 +1,6 @@
 """FlashAlpha options-flow data as QuantConnect LEAN custom-data bars."""
 
-__version__ = "0.1.5"
+__version__ = "0.1.6"
 
 from . import config
 from .data.exposure import (

@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 _No changes yet._
 
+## [0.1.6] — 2026-06-02
+
+### Fixed
+
+- **`FlashAlphaSource.For` shifts midnight-UTC dates to 20:00 UTC (16:00 ET, NYSE close) before calling the API.** v0.1.5 still passed LEAN's daily-resolution timestamp (midnight UTC) straight through to FlashAlpha. The API only has market-hours data, so every daily-res request returned NoDataError → empty file → LEAN skipped the bar. Algorithms got 0 trades despite the bridge working. Now midnight-UTC dates are silently shifted to the session close; non-midnight times pass through unchanged so intraday subscriptions still get exactly what they asked for. Same fix in C# and Python.
+
 ## [0.1.5] — 2026-06-02
 
 ### Fixed

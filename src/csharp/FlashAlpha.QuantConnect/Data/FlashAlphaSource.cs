@@ -47,6 +47,11 @@ public static class FlashAlphaSource
         // (NoDataException / NoCoverageException / InvalidAtException), write
         // an empty file so Parse returns null and LEAN skips the bar cleanly.
         //
+        // Date shift: LEAN daily-res ticks midnight UTC but FlashAlpha has
+        // market-hours data only. Shift midnight to 20:00 UTC (16:00 ET, NYSE
+        // close) so the API returns the session's closing snapshot.
+        var apiAt = ShiftToMarketHours(date);
+        //
         // Transport: LocalFile — LEAN's RestSubscriptionStreamReader would try
         // to HTTP-fetch a URL, so a custom in-memory sentinel scheme isn't
         // workable. Writing JSON as a single-line file under the OS tempdir
@@ -56,7 +61,7 @@ public static class FlashAlphaSource
         try
         {
             payload = _http.Value
-                .FetchJsonAsync(endpoint, symbol.Value, date)
+                .FetchJsonAsync(endpoint, symbol.Value, apiAt)
                 .GetAwaiter().GetResult();
         }
         catch (FlashAlpha.Historical.NoDataException)
@@ -85,6 +90,21 @@ public static class FlashAlphaSource
             path,
             SubscriptionTransportMedium.LocalFile,
             FileFormat.Csv);
+    }
+
+    /// <summary>
+    /// LEAN daily-res ticks at midnight UTC but FlashAlpha has market-hours
+    /// data only. Shift any midnight-UTC date to 20:00 UTC (16:00 ET, NYSE
+    /// close) so the API returns the session's closing snapshot. Non-midnight
+    /// dates pass through unchanged.
+    /// </summary>
+    private static DateTime ShiftToMarketHours(DateTime date)
+    {
+        if (date.Hour == 0 && date.Minute == 0 && date.Second == 0)
+        {
+            return date.AddHours(20);
+        }
+        return date;
     }
 
     /// <summary>

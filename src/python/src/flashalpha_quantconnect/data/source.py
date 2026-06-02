@@ -46,6 +46,20 @@ def _to_pascal_case(snake: str) -> str:
     return "".join(p.title() for p in snake.split("_"))
 
 
+def _shift_to_market_hours(date: datetime) -> datetime:
+    """LEAN daily-res ticks at midnight UTC, but FlashAlpha's historical API
+    only has market-hours data. Shift any midnight-UTC date to 20:00 UTC
+    (16:00 ET, NYSE close) so the API returns the session's closing snapshot.
+
+    Dates with non-midnight times pass through unchanged — callers that
+    want a specific timestamp (intraday hourly subscriptions, etc.) get
+    exactly what they asked for.
+    """
+    if date.hour == 0 and date.minute == 0 and date.second == 0:
+        return date.replace(hour=20, minute=0, second=0)
+    return date
+
+
 def source_for(endpoint: str, symbol: Any, date: datetime) -> Any:
     """Eagerly fetch the JSON for (endpoint, ticker, date), persist it to a
     temp file, return a ``SubscriptionDataSource`` pointing LEAN at the file.
@@ -80,8 +94,9 @@ def source_for(endpoint: str, symbol: Any, date: datetime) -> Any:
     ticker = symbol.Value
     key = _make_key(endpoint, ticker, date)
 
+    api_at = _shift_to_market_hours(date)
     try:
-        payload = _get_client().fetch_json(endpoint=endpoint, ticker=ticker, at=date)
+        payload = _get_client().fetch_json(endpoint=endpoint, ticker=ticker, at=api_at)
         line = json.dumps(payload)
     except (NoDataError, NoCoverageError, InvalidAtError):
         line = ""
