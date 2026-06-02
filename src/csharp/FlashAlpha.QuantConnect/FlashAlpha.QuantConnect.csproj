@@ -2,7 +2,7 @@
   <PropertyGroup>
     <PackageId>FlashAlpha.QuantConnect</PackageId>
     <RootNamespace>FlashAlpha.QuantConnect</RootNamespace>
-    <Version>0.1.4</Version>
+    <Version>0.1.5</Version>
     <Authors>FlashAlpha</Authors>
     <Company>FlashAlpha</Company>
     <Copyright>Copyright (c) 2026 FlashAlpha</Copyright>

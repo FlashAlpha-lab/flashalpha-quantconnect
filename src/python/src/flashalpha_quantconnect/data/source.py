@@ -47,17 +47,26 @@ def _to_pascal_case(snake: str) -> str:
 
 
 def source_for(endpoint: str, symbol: Any, date: datetime) -> Any:
-    """Eagerly fetch the JSON for (endpoint, ticker, date), cache it, return
-    a sentinel ``SubscriptionDataSource`` that ``parse`` will resolve via
-    the cache key.
+    """Eagerly fetch the JSON for (endpoint, ticker, date), persist it to a
+    temp file, return a ``SubscriptionDataSource`` pointing LEAN at the file.
 
     Sparse data is the expected case for LEAN custom-data subscriptions —
-    weekends, holidays, pre-RTH midnight ticks on a Daily resolution etc.
+    weekends, holidays, pre-RTH midnight ticks on a Daily resolution, etc.
     When the FlashAlpha API reports no data at the requested timestamp
-    (``NoDataError`` / ``NoCoverageError`` / ``InvalidAtError``), we cache
-    an empty payload so ``parse`` returns ``None`` and LEAN skips the bar
-    cleanly. The algorithm waits for the next session, no error surfaces.
+    (``NoDataError`` / ``NoCoverageError`` / ``InvalidAtError``), we write an
+    empty file so ``parse`` returns ``None`` and LEAN skips the bar cleanly.
+    The algorithm waits for the next session, no error surfaces.
+
+    Transport: ``LocalFile`` — LEAN's ``RestSubscriptionStreamReader`` would
+    try to HTTP-fetch a URL, so a custom in-memory sentinel scheme isn't
+    workable. Writing the JSON to a single-line file under the OS tempdir
+    and using ``LocalFile`` + ``FileFormat.Csv`` lets LEAN's standard
+    line-by-line reader hand the full JSON to ``Reader`` as the ``line``
+    argument in one call.
     """
+    import os
+    import tempfile
+
     from QuantConnect import SubscriptionTransportMedium
     from QuantConnect.Data import SubscriptionDataSource, FileFormat
 
@@ -73,16 +82,30 @@ def source_for(endpoint: str, symbol: Any, date: datetime) -> Any:
 
     try:
         payload = _get_client().fetch_json(endpoint=endpoint, ticker=ticker, at=date)
-        with _cache_lock:
-            _cache[key] = json.dumps(payload)
+        line = json.dumps(payload)
     except (NoDataError, NoCoverageError, InvalidAtError):
-        # Sparse data — cache empty so parse returns None; LEAN skips this bar.
-        with _cache_lock:
-            _cache[key] = ""
+        line = ""
+
+    # Cache for parse() — handles both the LocalFile path (line == file contents)
+    # and any other call shape that might bypass the file (defensive).
+    with _cache_lock:
+        _cache[key] = line
+
+    # Persist as a single-line file under the OS tempdir. LEAN's LocalFile
+    # transport + Csv format reads line-by-line, so a 1-line JSON file
+    # yields exactly one Reader call with the full payload as `line`.
+    tmp_dir = os.path.join(tempfile.gettempdir(), "flashalpha-quantconnect")
+    os.makedirs(tmp_dir, exist_ok=True)
+    # Filename includes the cache key — deterministic across runs of the
+    # same (endpoint, ticker, date) and avoids tempfile churn.
+    safe_key = key.replace("/", "_").replace("|", "_")
+    path = os.path.join(tmp_dir, f"{safe_key}.json")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(line)
 
     return SubscriptionDataSource(
-        f"{_SENTINEL_PREFIX}{key}",
-        SubscriptionTransportMedium.Rest,
+        path,
+        SubscriptionTransportMedium.LocalFile,
         FileFormat.Csv,
     )
 

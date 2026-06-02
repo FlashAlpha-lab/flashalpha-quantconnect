@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 _No changes yet._
 
+## [0.1.5] — 2026-06-02
+
+### Fixed
+
+- **`FlashAlphaSource.For` now writes the JSON payload to a temp file and returns a `LocalFile` transport, instead of a custom `flashalpha://` sentinel URL.** v0.1.4's `Rest` transport with a custom-scheme URL fell over inside LEAN — its `RestSubscriptionStreamReader` actually HTTP-fetches the URL it's handed and rejected the unknown scheme with `System.NotSupportedException: The 'flashalpha' scheme is not supported`. LEAN's `Reader` was never called. The source now writes a single-line JSON file under the OS tempdir per `(endpoint, ticker, date)` and returns `SubscriptionTransportMedium.LocalFile`; LEAN's standard line-by-line reader hands the full JSON to `Reader` as the `line` argument in one call. Same fix in C# and Python. Caught by V8 Tier 2 smoke against bridge v0.1.4.
+
 ## [0.1.4] — 2026-06-02
 
 ### Fixed

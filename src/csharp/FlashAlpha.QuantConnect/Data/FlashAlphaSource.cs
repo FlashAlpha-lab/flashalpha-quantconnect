@@ -39,38 +39,51 @@ public static class FlashAlphaSource
     public static SubscriptionDataSource For(string endpoint, Symbol symbol, DateTime date)
     {
         var key = MakeKey(endpoint, symbol.Value, date);
-        // Eager fetch — store in cache for Reader to consume.
-        // Synchronous block via GetAwaiter().GetResult() because LEAN's
-        // GetSource is sync; bar classes can't be async.
+        // Eager fetch — sync-over-async because LEAN's GetSource is sync.
         //
         // Sparse data is the expected case for LEAN custom-data subscriptions —
         // weekends, holidays, pre-RTH midnight ticks on Daily resolution, etc.
         // When the FlashAlpha API reports no data at the requested timestamp
-        // (NoDataException / NoCoverageException / InvalidAtException), cache
-        // an empty payload so Parse returns null and LEAN skips the bar cleanly.
-        // The algorithm waits for the next session, no error surfaces.
+        // (NoDataException / NoCoverageException / InvalidAtException), write
+        // an empty file so Parse returns null and LEAN skips the bar cleanly.
+        //
+        // Transport: LocalFile — LEAN's RestSubscriptionStreamReader would try
+        // to HTTP-fetch a URL, so a custom in-memory sentinel scheme isn't
+        // workable. Writing JSON as a single-line file under the OS tempdir
+        // and using LocalFile + FileFormat.Csv lets LEAN's standard line-by-line
+        // reader hand the full JSON to Reader as the `line` argument in one call.
+        string payload;
         try
         {
-            var json = _http.Value
+            payload = _http.Value
                 .FetchJsonAsync(endpoint, symbol.Value, date)
                 .GetAwaiter().GetResult();
-            _cache[key] = json;
         }
         catch (FlashAlpha.Historical.NoDataException)
         {
-            _cache[key] = string.Empty;
+            payload = string.Empty;
         }
         catch (FlashAlpha.Historical.NoCoverageException)
         {
-            _cache[key] = string.Empty;
+            payload = string.Empty;
         }
         catch (FlashAlpha.Historical.InvalidAtException)
         {
-            _cache[key] = string.Empty;
+            payload = string.Empty;
         }
+
+        _cache[key] = payload;
+
+        // Persist as a single-line file under the OS tempdir.
+        var tmpDir = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "flashalpha-quantconnect");
+        System.IO.Directory.CreateDirectory(tmpDir);
+        var safeKey = key.Replace("/", "_").Replace("|", "_");
+        var path = System.IO.Path.Combine(tmpDir, $"{safeKey}.json");
+        System.IO.File.WriteAllText(path, payload);
+
         return new SubscriptionDataSource(
-            SentinelPrefix + key,
-            SubscriptionTransportMedium.Rest,
+            path,
+            SubscriptionTransportMedium.LocalFile,
             FileFormat.Csv);
     }
 
