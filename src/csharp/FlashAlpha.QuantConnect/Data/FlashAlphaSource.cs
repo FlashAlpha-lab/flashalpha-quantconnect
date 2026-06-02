@@ -42,10 +42,32 @@ public static class FlashAlphaSource
         // Eager fetch — store in cache for Reader to consume.
         // Synchronous block via GetAwaiter().GetResult() because LEAN's
         // GetSource is sync; bar classes can't be async.
-        var json = _http.Value
-            .FetchJsonAsync(endpoint, symbol.Value, date)
-            .GetAwaiter().GetResult();
-        _cache[key] = json;
+        //
+        // Sparse data is the expected case for LEAN custom-data subscriptions —
+        // weekends, holidays, pre-RTH midnight ticks on Daily resolution, etc.
+        // When the FlashAlpha API reports no data at the requested timestamp
+        // (NoDataException / NoCoverageException / InvalidAtException), cache
+        // an empty payload so Parse returns null and LEAN skips the bar cleanly.
+        // The algorithm waits for the next session, no error surfaces.
+        try
+        {
+            var json = _http.Value
+                .FetchJsonAsync(endpoint, symbol.Value, date)
+                .GetAwaiter().GetResult();
+            _cache[key] = json;
+        }
+        catch (FlashAlpha.Historical.NoDataException)
+        {
+            _cache[key] = string.Empty;
+        }
+        catch (FlashAlpha.Historical.NoCoverageException)
+        {
+            _cache[key] = string.Empty;
+        }
+        catch (FlashAlpha.Historical.InvalidAtException)
+        {
+            _cache[key] = string.Empty;
+        }
         return new SubscriptionDataSource(
             SentinelPrefix + key,
             SubscriptionTransportMedium.Rest,

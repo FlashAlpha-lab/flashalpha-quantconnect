@@ -49,16 +49,36 @@ def _to_pascal_case(snake: str) -> str:
 def source_for(endpoint: str, symbol: Any, date: datetime) -> Any:
     """Eagerly fetch the JSON for (endpoint, ticker, date), cache it, return
     a sentinel ``SubscriptionDataSource`` that ``parse`` will resolve via
-    the cache key."""
+    the cache key.
+
+    Sparse data is the expected case for LEAN custom-data subscriptions —
+    weekends, holidays, pre-RTH midnight ticks on a Daily resolution etc.
+    When the FlashAlpha API reports no data at the requested timestamp
+    (``NoDataError`` / ``NoCoverageError`` / ``InvalidAtError``), we cache
+    an empty payload so ``parse`` returns ``None`` and LEAN skips the bar
+    cleanly. The algorithm waits for the next session, no error surfaces.
+    """
     from QuantConnect import SubscriptionTransportMedium
     from QuantConnect.Data import SubscriptionDataSource, FileFormat
 
+    # Import sparsely — the SDK exception classes only need to exist at
+    # call time, and importing them at module load would couple this file
+    # to the SDK's namespace shape.
+    from flashalpha_historical.exceptions import (
+        NoDataError, NoCoverageError, InvalidAtError,
+    )
+
     ticker = symbol.Value
     key = _make_key(endpoint, ticker, date)
-    payload = _get_client().fetch_json(endpoint=endpoint, ticker=ticker, at=date)
 
-    with _cache_lock:
-        _cache[key] = json.dumps(payload)
+    try:
+        payload = _get_client().fetch_json(endpoint=endpoint, ticker=ticker, at=date)
+        with _cache_lock:
+            _cache[key] = json.dumps(payload)
+    except (NoDataError, NoCoverageError, InvalidAtError):
+        # Sparse data — cache empty so parse returns None; LEAN skips this bar.
+        with _cache_lock:
+            _cache[key] = ""
 
     return SubscriptionDataSource(
         f"{_SENTINEL_PREFIX}{key}",

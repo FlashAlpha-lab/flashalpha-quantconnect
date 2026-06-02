@@ -8,6 +8,12 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) and 
 
 _No changes yet._
 
+## [0.1.4] — 2026-06-02
+
+### Fixed
+
+- **`FlashAlphaSource.For` now catches sparse-data exceptions and returns null bars instead of erroring out.** Sparse data is the expected case for LEAN custom-data subscriptions — weekends, holidays, pre-RTH midnight ticks on Daily resolution, dates without coverage, etc. v0.1.3 propagated `NoDataError` / `NoCoverageError` / `InvalidAtError` straight from the SDK, which caused LEAN's data feed worker to abort the entire subscription (manifesting as `Sequence contains no elements` on backtest completion). The source now catches those three exception types and caches an empty payload, so `Parse` returns null and LEAN skips the bar cleanly. The algorithm waits for the next session, no error surfaces. Caught by V8 Tier 2 smoke after v0.1.3 — LEAN's daily-resolution subscription calls `For` with `date=midnight UTC`, but the FlashAlpha API only has data at market-hours timestamps. Same fix shipped to C# (`FlashAlphaSource.cs`) and Python (`data.source.source_for`).
+
 ## [0.1.3] — 2026-06-02
 
 ### Fixed
@@ -44,7 +50,8 @@ Initial public release. The bridge ships with full coverage of the FlashAlpha hi
 - **Documentation corpus.** Repo-root `README.md` with side-by-side C# + Python examples, `docs/getting-started.md`, `docs/data-types.md` (per-bar field reference for all 17 endpoints), `docs/auth.md`, `docs/troubleshooting.md`, and five `docs/recipes/*.md` cookbooks.
 - **`llms.txt`** site map per [llmstxt.org](https://llmstxt.org/).
 
-[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/FlashAlpha-lab/flashalpha-quantconnect/compare/v0.1.0...v0.1.1
