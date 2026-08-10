@@ -179,9 +179,9 @@ Sugar extensions: every bar has a one-liner — `algo.AddFlashAlphaGex("SPY")` i
 
 ---
 
-## Futures (CME equity-index)
+## Futures (CME)
 
-FlashAlpha serves the full options-analytics stack for **CME equity-index futures** — **`ES=F`** (E-mini S&P 500) and **`NQ=F`** (E-mini Nasdaq-100). Options-on-futures are priced with **Black-76** (forward-priced) using the correct CME contract multipliers. Everything that works for an equity works for futures: gamma exposure (GEX), DEX, VEX, CHEX, key levels, max pain, the IV surface, exposure summary, narrative, and live flow.
+FlashAlpha serves the full options-analytics stack for **CME futures** across five complexes - equity index (`ES=F`, `NQ=F`, `RTY=F`, `YM=F`, `MES=F`, `MNQ=F`), metals (`GC=F` gold, `SI=F` silver), the Treasury curve (`ZT=F`, `ZF=F`, `ZN=F`, `TN=F`, `ZB=F`, `UB=F`), grains (`ZC=F`, `ZS=F`, `ZW=F`, `ZL=F`, `ZM=F`) and crypto (`BTC=F`, `ETH=F`). Options-on-futures are priced with **Black-76** (forward-priced) and each root carries its own CME contract multiplier, so notionals and dollar gamma are in real dollars. Note the quote conventions: Treasuries are quoted in points of par and grains in cents, so their multipliers are the contract size divided by 100. Everything that works for an equity works for futures: gamma exposure (GEX), DEX, VEX, CHEX, key levels, max pain, the IV surface, exposure summary, narrative, and live flow.
 
 This LEAN bridge plumbs the *historical* endpoint family, and historical replay for futures is coming. Futures analytics are available now on the **live** API (and the SDKs / MCP server). You can hit them directly from a `OnData` handler today:
 
@@ -191,7 +191,7 @@ curl -H "X-Api-Key: $FLASHALPHA_API_KEY" \
   "https://lab.flashalpha.com/v1/exposure/gex/ES%3DF"
 ```
 
-Use the `=F` suffix — bare `ES`/`NQ` are equities, not futures. In raw REST paths URL-encode the `=` as `%3D` (e.g. `GET /v1/exposure/gex/ES%3DF`); SDK methods take the plain string `"ES=F"`. Historical replay for futures is coming; live analytics are available now.
+Use the `=F` suffix - bare `ES`/`NQ` are equities, not futures. In raw REST paths URL-encode the `=` as `%3D` (e.g. `GET /v1/exposure/gex/GC%3DF`); SDK methods take the plain string `"GC=F"`. Futures symbols require the Growth plan or higher. Historical replay for futures is coming; live analytics are available now.
 
 ---
 
