@@ -164,7 +164,7 @@ that produced it.
   "futures_feed": null,
   "futures_options_feed": null,
   "flow_feed": "2026-08-25T18:48:55.100Z",
-  "oi_feed": "2026-08-22T20:00:00.000Z",
+  "oi_feed": "2026-08-24T20:00:00.000Z",
   "macro_feed": "2026-08-25T18:45:00.000Z"
 }
 ```
@@ -184,6 +184,14 @@ in a chain is equally current: an illiquid strike may not have quoted for hours 
 feed is healthy.
 
 Full reference: <https://flashalpha.com/docs/lab-api-overview#response-envelope>
+
+
+> **Note on provenance in LEAN.** The underlying REST payloads carry the `data_as_of` /
+> `archive_as_of` envelope described above, but this adapter does not surface it: the LEAN
+> bars map only the analytics fields, so the envelope is dropped at the bridge. If a study
+> needs to gate on archive vintage, read it from `flashalpha-historical` directly rather
+> than from the bar.
+
 
 ## Data catalog
 
