@@ -2,6 +2,18 @@
 
 > FlashAlpha options-flow and dealer-positioning data as native QuantConnect LEAN custom-data bars. Seventeen endpoint families — GEX/DEX/VEX/CHEX, exposure summary/levels, vol surface, 0DTE, max pain, volatility, advanced vol (SVI), VRP, narrative, stock summary/quote, option quote, tickers — exposed as `BaseData` subclasses in C# and `PythonData` subclasses in Python. Works in QC Cloud and self-hosted LEAN. Versioned to the underlying `flashalpha-historical` SDK so schema drift breaks at compile time.
 
+## Data provenance
+
+Every FlashAlpha API response carries `data_as_of`: when each upstream feed last delivered
+to the node that answered - equity and index spot, their option chains, futures and futures
+options, the classified trade tape, settled open interest, and the macro series, each
+reported separately because they arrive over different pipes and fail independently. `null`
+means that node has not seen that feed, not that it is broken. Read each feed against its
+own cadence: settled open interest dated to the previous session's close is correct, while
+an options feed an hour behind during the regular session is not. `endpoint_version`
+identifies the deployment. Full reference:
+https://flashalpha.com/docs/lab-api-overview#response-envelope
+
 ## Docs
 
 - [README](README.md): elevator pitch, install, first algorithm, full data catalog, FAQ
