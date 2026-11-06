@@ -31,6 +31,9 @@ https://flashalpha.com/docs/lab-api-overview#response-envelope
 - [0DTE pin-risk check in QuantConnect](docs/recipes/0dte-pin-risk-check-in-quantconnect.md)
 - [Vol-surface snapshot in QuantConnect](docs/recipes/vol-surface-snapshot-in-quantconnect.md)
 
+## sell-window
+- [Historical sell-window API](https://flashalpha.com/docs/historical-sell-window): replay "should you sell options today?" for SPY, QQQ and IWM on any session since 2018. REST route and historical SDK method, not a LEAN data type in this package.
+
 ## Related
 
 - [historical.flashalpha.com](https://historical.flashalpha.com): the underlying API

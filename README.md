@@ -313,6 +313,7 @@ The current bar set targets the *historical* endpoint family — meant for backt
 - [historical.flashalpha.com](https://historical.flashalpha.com) — the underlying API.
 - [flashalpha-historical-python](https://pypi.org/project/flashalpha-historical/) / [-dotnet](https://www.nuget.org/packages/FlashAlpha.Historical/) / [-js](https://www.npmjs.com/package/@flashalpha/historical) / [-go](https://pkg.go.dev/github.com/FlashAlpha-lab/flashalpha-historical-go) / [-java](https://central.sonatype.com/artifact/com.flashalpha/flashalpha-historical) — raw SDKs.
 - `flashalpha-historical-examples` (upcoming) — twenty-plus end-to-end backtest essays using this bridge.
+- [sell-window](https://flashalpha.com/docs/historical-sell-window?utm_source=github&utm_medium=readme&utm_campaign=repo-flashalpha-quantconnect&utm_content=sell-window): replay "should you sell options today?" for SPY, QQQ and IWM on any session since 2018, strikes included, to filter short-premium algorithms on the same calls. It is a REST route and a method in the historical SDKs, not a LEAN data type in this package. See the [backtest](https://flashalpha.com/articles/sell-window-backtest-every-trade-2018-2026?utm_source=github&utm_medium=readme&utm_campaign=repo-flashalpha-quantconnect&utm_content=sell-window).
 - [LEAN custom data](https://www.quantconnect.com/docs/v2/writing-algorithms/datasets/custom-data) — QC's reference for how custom-data subscriptions work.
 
 ---
