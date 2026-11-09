@@ -683,7 +683,7 @@ self.Debug(f"atm_iv={bar.AtmIv:.3f}  rv_20d={rv.get('rv_20d'):.3f}")
 
 Per-expiry SVI parameters, forward prices, the full total-variance surface (log-moneyness × tenor grid), arbitrage flags, variance-swap fair values, and second-/third-order Greek surfaces.
 
-**Plan tier:** Alpha or above. **Cold-cache latency:** ~1.5s — bump `HttpTimeout` if you see timeouts.
+**Plan tier:** Alpha or above. **Latency:** up to ~1.5s. Bump `HttpTimeout` if you see timeouts.
 
 ### Fields
 

@@ -72,8 +72,8 @@ class AdvVolatilityBar(PythonDataBase):
     """Advanced volatility-analytics bar.
 
     Mirrors ``flashalpha_historical.types.AdvVolatilityResponse`` from
-    ``GET /v1/adv_volatility/{symbol}?at=...``. Cold-cache responses can
-    take ~1.5s.
+    ``GET /v1/adv_volatility/{symbol}?at=...``. Responses can take
+    ~1.5s.
 
     Subscribe with: ``algo.AddData(AdvVolatilityBar, ticker, Resolution.Daily)``
     or the sugar ``add_flashalpha_adv_volatility(algo, "SPY")``.
