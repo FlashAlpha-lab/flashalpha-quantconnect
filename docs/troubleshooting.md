@@ -11,7 +11,7 @@ This doc covers:
 - [Why two symbols? (custom-data vs equity)](#why-two-symbols)
 - [Bar fields are null](#bar-fields-null)
 - [Tier-restricted endpoints](#tier-restricted)
-- [Cold-cache slowness on `adv-volatility`](#cold-cache-adv-vol)
+- [Slow `adv-volatility` responses](#slow-adv-vol)
 
 ---
 
@@ -230,12 +230,11 @@ Fix: upgrade in the FlashAlpha dashboard, or remove the `AddData<…>` for the r
 
 ---
 
-## cold-cache-adv-vol
+## slow-adv-vol
 
-The `adv-volatility` endpoint runs SVI calibration plus full surface arbitrage checks on each request. **Cold-cache responses can take ~1.5s.** First request after a process restart, or on a date that's never been requested before, blows past the default 30-second HTTP timeout only on pathological surfaces — but per-bar latency is noticeably higher than `gex` or `surface`.
+The `adv-volatility` endpoint runs SVI calibration plus full surface arbitrage checks on each request. **Responses can take ~1.5s.** First request after a process restart, or on a date that's never been requested before, blows past the default 30-second HTTP timeout only on pathological surfaces — but per-bar latency is noticeably higher than `gex` or `surface`.
 
 If you're hitting timeouts:
 
 - Bump `FlashAlphaConfig.HttpTimeout` to 60 seconds.
 - Don't subscribe `adv-volatility` minute-by-minute. The endpoint is daily-cadence in spirit; minute subscriptions multiply cost without giving you fresh SVI parameters between bars.
-- Pre-warm the cache by hitting the date range in a research notebook (`lean research`) before running the backtest.

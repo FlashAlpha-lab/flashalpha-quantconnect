@@ -106,8 +106,8 @@ public class FlashAlphaVolatilityBar : BaseData
 /// SVI parameters, forward prices, the full total-variance surface, arbitrage
 /// flags, variance swap fair values, and second-/third-order greek surfaces.</para>
 ///
-/// <para>Cold-cache responses can take ~1.5s — bars should be requested with
-/// generous timeouts. Plan-canonical endpoint slug is <c>adv-volatility</c>
+/// <para>Responses can take ~1.5s, so request bars with generous
+/// timeouts. Plan-canonical endpoint slug is <c>adv-volatility</c>
 /// (hyphenated); SDK REST path is <c>adv_volatility</c> (underscored). Both
 /// resolve to the same SDK method.</para>
 ///
